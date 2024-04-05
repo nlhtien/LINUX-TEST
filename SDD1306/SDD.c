@@ -181,7 +181,6 @@ static void SSD1306_Write(bool is_cmd, unsigned char data)
 
 static void SSD1306_SetCursor( uint8_t lineNo, uint8_t cursorPos )
 {
-  /* Move the Cursor to specified position only if it is in range */
   if((lineNo <= SSD1306_MAX_LINE) && (cursorPos < SSD1306_MAX_SEG))
   {
     SSD1306_LineNum   = lineNo;             // Save the specified line number
@@ -217,7 +216,7 @@ static void SSD1306_PrintChar(unsigned char c)
     SSD1306_GoToNextLine();
   }
 
-  // print charcters other than new line
+
   if( c != '\n' )
   {
   
@@ -225,7 +224,7 @@ static void SSD1306_PrintChar(unsigned char c)
 
     do
     {
-      data_byte= SSD1306_font[c][temp]; // Get the data to be displayed from LookUptable
+      data_byte= SSD1306_font[c][temp]; //
 
       SSD1306_Write(false, data_byte);  // write data to the OLED
       SSD1306_CursorPos++;
@@ -263,12 +262,12 @@ static void SSD1306_StartScrollHorizontal( bool is_left_scroll,
     SSD1306_Write(true, 0x26);
   }
   
-  SSD1306_Write(true, 0x00);            // Dummy byte (dont change)
+  SSD1306_Write(true, 0x00);            
   SSD1306_Write(true, start_line_no);   // Start page address
   SSD1306_Write(true, 0x00);            // 5 frames interval
   SSD1306_Write(true, end_line_no);     // End page address
-  SSD1306_Write(true, 0x00);            // Dummy byte (dont change)
-  SSD1306_Write(true, 0xFF);            // Dummy byte (dont change)
+  SSD1306_Write(true, 0x00);         
+  SSD1306_Write(true, 0xFF);            
   SSD1306_Write(true, 0x2F);            // activate scroll
 }
 
@@ -330,14 +329,16 @@ static int etx_oled_probe(struct i2c_client *client,
                           const struct i2c_device_id *id)
 {
   SSD1306_DisplayInit();
+  SSD1306_Fill(0x00);
+  msleep(1000);
   SSD1306_Fill(0xFF);
   
   //Set cursor
   //SSD1306_SetCursor(0,0);  
-  //SSD1306_StartScrollHorizontal( true, 0, 2);
+  //SSD1306_StartScrollHorizontal( true, 0, 7);
 
   //Write String to OLED
-  //SSD1306_String("HELLO KORA");
+  //SSD1306_String("HELLO_KORA\n");
   
   pr_info("OLED Probed!!!\n");
   
@@ -363,18 +364,14 @@ static int etx_oled_remove(struct i2c_client *client)
   return 0;
 }
  
-/*
-** Structure that has slave device id
-*/
+
 static const struct i2c_device_id etx_oled_id[] = {
   { SLAVE_DEVICE_NAME, 0 },
   { }
 };
 MODULE_DEVICE_TABLE(i2c, etx_oled_id);
  
-/*
-** I2C driver Structure that has to be added to linux
-*/
+
 static struct i2c_driver etx_oled_driver = {
   .driver = {
     .name   = SLAVE_DEVICE_NAME,
@@ -392,9 +389,6 @@ static struct i2c_board_info oled_i2c_board_info = {
     I2C_BOARD_INFO(SLAVE_DEVICE_NAME, SSD1306_SLAVE_ADDR)
 };
  
-/*
-** Module Init function
-*/
 static int __init etx_driver_init(void)
 {
   int ret = -1;
@@ -416,10 +410,6 @@ static int __init etx_driver_init(void)
   pr_info("Driver Added!!!\n");
   return ret;
 }
- 
-/*
-** Module Exit function
-*/
 static void __exit etx_driver_exit(void)
 {
   i2c_unregister_device(etx_i2c_client_oled);
