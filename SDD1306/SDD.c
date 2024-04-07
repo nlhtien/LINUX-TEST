@@ -10,7 +10,7 @@
 #define SSD1306_SLAVE_ADDR      (       0x3C )              // SSD1306 -Slave Address
 #define SSD1306_MAX_SEG         (        128 )              // Maximum segment
 #define SSD1306_MAX_LINE        (          7 )              // Maximum line
-#define SSD1306_DEF_FONT_SIZE   (          5 )              // Default font size
+#define SSD1306_DEF_FONT_SIZE   (          5 )              
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Kora");
@@ -35,7 +35,7 @@ static void SSD1306_Write(bool is_cmd, unsigned char data);
 
 
 static struct i2c_adapter *etx_i2c_adapter     = NULL;  // I2C Adapter Structure
-static struct i2c_client  *etx_i2c_client_oled = NULL;  // I2C Cient Structure (In our case it is OLED)
+static struct i2c_client  *etx_i2c_client_oled = NULL;  // I2C Cient Structure 
 
 static uint8_t SSD1306_LineNum   = 0;
 static uint8_t SSD1306_CursorPos = 0;
@@ -183,8 +183,8 @@ static void SSD1306_SetCursor( uint8_t lineNo, uint8_t cursorPos )
 {
   if((lineNo <= SSD1306_MAX_LINE) && (cursorPos < SSD1306_MAX_SEG))
   {
-    SSD1306_LineNum   = lineNo;             // Save the specified line number
-    SSD1306_CursorPos = cursorPos;          // Save the specified cursor position
+    SSD1306_LineNum   = lineNo;             // Save line number
+    SSD1306_CursorPos = cursorPos;          // Save cursor position
 
     SSD1306_Write(true, 0x21);              // cmd for the column start and end address
     SSD1306_Write(true, cursorPos);         // column start addr
@@ -200,8 +200,8 @@ static void  SSD1306_GoToNextLine( void )
 {
   SSD1306_LineNum++;
   SSD1306_LineNum = (SSD1306_LineNum & SSD1306_MAX_LINE);
-
-  SSD1306_SetCursor(SSD1306_LineNum,0); /* Finally move it to next line */
+ //Finally move it to next line
+  SSD1306_SetCursor(SSD1306_LineNum,0);
 }
 
 static void SSD1306_PrintChar(unsigned char c)
